@@ -15,5 +15,5 @@
 ',
     'Use register_banc_coconat() to register bancr with coconatfly.
 ',
-    'Trouble? Visit https://flyconnectome.github.io/bancr/SUPPORT.html or #code on banc Slack')
+    'Trouble? Visit https://natverse.github.io/bancr/SUPPORT.html or #code on banc Slack')
 }

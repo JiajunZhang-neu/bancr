@@ -1,0 +1,68 @@
+citHeader("To cite bancr in publications use:")
+
+bibentry(
+  bibtype  = "Article",
+  title    = "Distributed control circuits across a brain-and-cord connectome",
+  author   = c(
+    person("Alexander Shakeel", "Bates"),
+    person("Jasper S.", "Phelps"),
+    person("Minsu", "Kim"),
+    person("Han S. J.", "Yang"),
+    person("Arie", "Matsliah"),
+    person("Zaki", "Ajabi"),
+    person("Eric", "Perlman"),
+    person(family = "et al.")
+  ),
+  journal  = "bioRxiv",
+  year     = "2025",
+  doi      = "10.1101/2025.07.31.667571",
+  url      = "https://doi.org/10.1101/2025.07.31.667571",
+  textVersion = paste(
+    "Bates AS, Phelps JS, Kim M, Yang HSJ, Matsliah A, Ajabi Z, Perlman E, et al. (2025).",
+    "Distributed control circuits across a brain-and-cord connectome.",
+    "bioRxiv 2025.07.31.667571.",
+    "doi:10.1101/2025.07.31.667571."
+  )
+)
+
+bibentry(
+  bibtype  = "Article",
+  title    = "The natverse, a versatile toolbox for combining and analysing neuroanatomical data",
+  author   = c(
+    person("Alexander Shakeel", "Bates"),
+    person("James D.", "Manton"),
+    person("Sridhar R.", "Jagannathan"),
+    person("Marta", "Costa"),
+    person("Philipp", "Schlegel"),
+    person("Torsten", "Rohlfing"),
+    person("Gregory S. X. E.", "Jefferis")
+  ),
+  journal  = "eLife",
+  year     = "2020",
+  volume   = "9",
+  doi      = "10.7554/eLife.53350",
+  url      = "https://elifesciences.org/articles/53350",
+  textVersion = paste(
+    "Bates AS, Manton JD, Jagannathan SR, Costa M, Schlegel P, Rohlfing T,",
+    "Jefferis GSXE (2020). The natverse, a versatile toolbox for combining",
+    "and analysing neuroanatomical data. eLife 9:e53350.",
+    "doi:10.7554/eLife.53350."
+  )
+)
+
+bibentry(
+  bibtype  = "Manual",
+  title    = "bancr: R Client Access to the Brain And Nerve Cord (BANC) Dataset",
+  author   = c(
+    person("Alexander Shakeel", "Bates"),
+    person("Gregory S. X. E.", "Jefferis")
+  ),
+  year     = format(Sys.Date(), "%Y"),
+  note     = sprintf("R package version %s", utils::packageVersion("bancr")),
+  url      = "https://github.com/natverse/bancr",
+  textVersion = sprintf(
+    "Bates A, Jefferis G (%s). bancr: R Client Access to the Brain And Nerve Cord (BANC) Dataset. R package version %s, https://github.com/natverse/bancr.",
+    format(Sys.Date(), "%Y"),
+    utils::packageVersion("bancr")
+  )
+)

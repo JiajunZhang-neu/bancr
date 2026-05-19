@@ -1,4 +1,4 @@
-url: https://flyconnectome.github.io/bancr
+url: https://natverse.github.io/bancr
 template:
   bootstrap: 5
 navbar:
@@ -23,7 +23,7 @@ navbar:
       href: reference/index.html
     github:
       icon: fab fa-github fa-lg
-      href: https://github.com/flyconnectome/bancr/
+      href: https://github.com/natverse/bancr/
     natverse:
       text: natverse
       href: https://natverse.github.io

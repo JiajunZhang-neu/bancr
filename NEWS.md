@@ -1,3 +1,20 @@
+# bancr 0.3.1 (development)
+
+* Repository moved from `flyconnectome/bancr` to `natverse/bancr`. The
+  old URL continues to redirect, but please update local clones with
+  `git remote set-url origin git@github.com:natverse/bancr.git` and any
+  `Remotes:` lines in downstream packages.
+* `banc_all_synapses()` retargeted to
+  `gs://lee-lab_brain-and-nerve-cord-fly-connectome/neuron_connectivity/v888/`
+  with a new `version` argument (defaults to `"v2"`; `"v1"` is deprecated,
+  `"v3"` is in testing). The dead `rawcoords` and `min_size` arguments
+  have been dropped and the help page now documents each version's CAVE
+  coordinate space.
+* New `inst/CITATION` with the BANC paper
+  (Bates et al. 2025, bioRxiv 2025.07.31.667571) and the natverse paper.
+* `License` field updated to `GPL (>= 3)` via
+  `usethis::use_gpl3_license()`.
+
 # bancr 0.3.0
 
 * new `banc_lm_scene()` for overlaying precomputed light-microscopy image
