@@ -4,41 +4,75 @@
 \alias{banc_meta_create_cache}
 \title{Create or refresh cache of BANC meta information}
 \usage{
-banc_meta_create_cache(use_seatable = FALSE, return = FALSE)
+banc_meta_create_cache(
+  source = c("gcs", "cave", "seatable"),
+  overwrite = FALSE,
+  use_seatable = NULL,
+  return = FALSE
+)
 }
 \arguments{
-\item{use_seatable}{Whether to build BANC meta data from the \code{codex_annotations} CAVE table
-(production) or our internal seatable (development). Both require different types of authenticated
-access, for details see \code{bancr} documentation.}
+\item{source}{Character. Where to read the meta from. One of \code{"gcs"}
+(default), \code{"cave"}, \code{"seatable"}. See \strong{Details}.}
 
-\item{return}{Logical; if \code{TRUE}, return the cache tibble/invisible.}
+\item{overwrite}{Logical. If \code{TRUE} and \code{source = "gcs"}, re-download
+the feather even if a cached copy exists.}
+
+\item{use_seatable}{Deprecated. If supplied, \code{TRUE} maps to
+\code{source = "seatable"} and \code{FALSE} (the old default) maps to
+\code{source = "cave"} (the previous default before GCS).}
+
+\item{return}{Logical; if \code{TRUE}, return the cache tibble; otherwise
+invisible \code{NULL}.}
 }
 \value{
-Invisibly returns the cache (data.frame) if \code{return=TRUE}; otherwise invisibly \code{NULL}.
+Invisibly returns the cache (data.frame) if \code{return=TRUE};
+otherwise invisibly \code{NULL}.
 }
 \description{
-\code{banc_meta_create_cache()} builds or refreshes an in-memory cache of BANC metadata
-for efficient repeated lookups. You can choose the data source using \code{use_seatable}.
-The main accessor function \code{\link[=banc_meta]{banc_meta()}} will always use the most recently created cache.
+\code{banc_meta_create_cache()} builds or refreshes an in-memory cache of
+BANC metadata for efficient repeated lookups. The default \code{source = "gcs"} reads the public compiled meta feather
+(\verb{gs://lee-lab_brain-and-nerve-cord-fly-connectome/compiled_data/banc_888/banc_888_meta.feather})
+and needs no authentication beyond network access. The main accessor
+\code{\link[=banc_meta]{banc_meta()}} always reads from the most recently created cache.
 }
 \details{
-BANC meta queries can be slow; caching avoids repeated computation/database access.
-Whenever labels are updated, simply rerun this function to update the cache.
+BANC meta queries can be slow; caching avoids repeated database access.
+Rerun whenever labels are updated upstream.
+
+Three sources are supported:
+\itemize{
+\item \code{"gcs"} (default): downloads \code{banc_888_meta.feather} from the
+public bucket (cached under \code{tools::R_user_dir("bancr", "cache")}).
+This is the recommended path for almost all users; it does not
+require BANC CAVE or SeaTable credentials.
+\item \code{"cave"}: builds the cache live from
+\code{\link[=banc_cell_info]{banc_cell_info()}} + \code{\link[=banc_codex_annotations]{banc_codex_annotations()}}. Requires
+authenticated BANC CAVE access. Use this when you need fresher
+annotations than the latest GCS snapshot.
+\item \code{"seatable"}: pulls the in-progress draft \code{banc_meta} SeaTable.
+\strong{Restricted to the BANC production team} (requires a
+\code{BANCTABLE_TOKEN}); the rest of the \verb{banctable_*} family is in the
+same category.
+}
 }
 \examples{
 \dontrun{
-#' # Requires authenticated access to BANC CAVE
-banc_meta_cache(use_seatable=FALSE)
+# Default: download once, cache locally, then look up
+banc_meta_create_cache()
+result <- banc_meta()
 
-banc_meta_create_cache(use_seatable=TRUE) # create cache
-## BANCTABLE_TOKEN must be set, see bancr package
-result <- banc_meta() # use cache
+# Live from CAVE (needs BANC CAVE auth)
+banc_meta_create_cache(source = "cave")
 
-# use cache to quickly make plot
+# SeaTable (production team only; needs BANCTABLE_TOKEN)
+banc_meta_create_cache(source = "seatable")
+
+# Use the cache to drive a coconatfly plot
 library(coconatfly)
-# only needed once per session
 register_banc_coconat()
-cf_cosine_plot(cf_ids('/type:LAL0(08|09|10|42)', datasets = c("banc", "hemibrain")))
+cf_cosine_plot(cf_ids('/type:LAL0(08|09|10|42)',
+                      datasets = c("banc", "hemibrain")))
 }
 }
 \seealso{
