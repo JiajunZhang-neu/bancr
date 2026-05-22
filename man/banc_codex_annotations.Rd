@@ -19,6 +19,15 @@ to pass in data.frames, BANC URLs or simple ids.}
 
 \item{live}{logical, get the most recent data or pull from the latest materialisation}
 
+\item{source}{\code{"gcs"} (default; reads the public
+\code{neuron_annotations/v888/codex_annotations.parquet} snapshot,
+no authentication required) or \code{"cave"} (live CAVE materialised
+query).}
+
+\item{fallback}{Logical, default \code{TRUE}. On primary-source failure,
+retry the alternative source and emit a warning. Set \code{FALSE} to
+surface the original error.}
+
 \item{...}{method passed to \code{\link{banc_cave_query}}.}
 }
 \value{

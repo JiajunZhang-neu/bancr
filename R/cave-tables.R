@@ -18,6 +18,10 @@
 #' @param table Character, possible alternative tables for the sort of data frame the function returns. One must be chosen.
 #' @param edgelist_view Character, name of prepared CAVE view that computes the proofread-neuron edgelist.
 #' @param simplify logical, if \code{TRUE} then the proportion of presynaptic connections for each transmitter type is returned, for each query neuron.
+#' @param fallback Logical, default \code{TRUE}. If the primary
+#'   \code{source} errors, automatically retry against the alternative
+#'   source and emit a warning describing what happened. Set
+#'   \code{FALSE} to surface the original error directly.
 #' @param ... Additional arguments passed to
 #'   \code{\link[fafbseg]{flywire_cave_query}} or \code{bancr:::get_cave_table_data}.
 #'
@@ -1254,6 +1258,13 @@ banc_annotate_bound_tag_user_cave_table <- function(positions,
 #'   convenience this argument is passed to \code{\link{banc_ids}} allowing you
 #'   to pass in data.frames, BANC URLs or simple ids.
 #' @param live logical, get the most recent data or pull from the latest materialisation
+#' @param source `"gcs"` (default; reads the public
+#'   `neuron_annotations/v888/codex_annotations.parquet` snapshot,
+#'   no authentication required) or `"cave"` (live CAVE materialised
+#'   query).
+#' @param fallback Logical, default `TRUE`. On primary-source failure,
+#'   retry the alternative source and emit a warning. Set `FALSE` to
+#'   surface the original error.
 #' @param ... method passed to \code{\link{banc_cave_query}}.
 #'
 #' @return A \code{data.frame} describing that should be similar to what you find for BANC

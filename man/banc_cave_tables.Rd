@@ -135,6 +135,11 @@ response small enough to cross the R/Python boundary. Default 200000.}
 The nucleus (\url{https://en.wikipedia.org/wiki/Cell_nucleus}) contains
 the cell body and provides a stable reference point for neuron identification.}
 
+\item{fallback}{Logical, default \code{TRUE}. If the primary
+\code{source} errors, automatically retry against the alternative
+source and emit a warning describing what happened. Set
+\code{FALSE} to surface the original error directly.}
+
 \item{simplify}{logical, if \code{TRUE} then the proportion of presynaptic connections for each transmitter type is returned, for each query neuron.}
 }
 \value{

@@ -3,6 +3,8 @@
 ^LICENSE\.md$
 ^\.github$
 ^_pkgdown\.yml$
+^pkgdown$
+^docs$
 ^vignettes/articles$
 ^data-raw$
 ^\.claude$
