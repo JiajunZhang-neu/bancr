@@ -1,0 +1,18 @@
+{
+  "title": "bancr: R Client Access to the Brain And Nerve Cord (BANC) Dataset",
+  "description": "R client for the BANC connectome. Wraps CAVE, GCS, and synapse-query endpoints; provides banc_meta(), banc_partners(), banc_edgelist(), banc_influence(), banc_nblast_matches(), banc_read_neuron_meshes(), banc_view(). Used by every analysis script in BANC-project (the paper's figure-reproduction repo) and by the alignment + matching workflows in bancpipeline.",
+  "license": "GPL-3.0-only",
+  "upload_type": "software",
+  "access_right": "open",
+  "creators": [
+    {"name": "Bates, Alexander Shakeel", "orcid": "0000-0002-1195-0445", "affiliation": "Harvard Medical School"}
+  ],
+  "keywords": [
+    "connectomics", "Drosophila", "BANC", "natverse",
+    "CAVE", "neuron", "R client"
+  ],
+  "related_identifiers": [
+    {"relation": "isSupplementTo", "identifier": "10.1101/2025.07.31.667571", "resource_type": "publication-preprint"},
+    {"relation": "isSourceOf", "identifier": "10.7910/DVN/7WTH1N", "resource_type": "dataset"}
+  ]
+}
