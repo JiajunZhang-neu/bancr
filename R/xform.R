@@ -259,31 +259,78 @@ read_elastix_output_file <- function(filepath) {
 }
 
 # hidden
+#
+# Rewrite the chained `InitialTransformParametersFileName` entry of an Elastix
+# parameter file so it points at the locally installed copy of the previous
+# stage. This is hardened against three failure modes that corrupted the shared
+# installed `extdata` files and broke VNC elastix warps in the BANC pipeline:
+#
+#   1. Empty / partially written input. `readLines()` on an already-clobbered
+#      file returns `character(0)`; `sapply(character(0), ...)` returns a *list*,
+#      and `writeLines(list(), ...)` then throws "can only write character
+#      objects". We coerce with `vapply(..., character(1))` and bail out cleanly
+#      if the file has no content or no header keys, so a corrupt file is never
+#      re-written into an even-worse state.
+#   2. Non-idempotent / non-self-healing matching. The canonical registration
+#      files (and the GCS exports) ship the path either as a bare directory
+#      (".../vnc_240721") or as directory+filename concatenated without a
+#      separator (".../brain_2407210_manual_affine.txt"). The pattern now
+#      tolerates an optional, possibly-separator-less `<search>.txt` suffix so
+#      every variant is normalised to the correct `<file_path>/<search>.txt`,
+#      and re-running on an already-fixed file is a no-op.
+#   3. Concurrent in-place writes. Many parallel foreach workers call this on the
+#      same installed file; a non-atomic `writeLines()` truncated it mid-write
+#      (leaving the 1-byte files we observed). We skip the write when the content
+#      is unchanged, and otherwise write to a temp file and atomically rename it
+#      into place so a reader/another writer never sees a half-written file.
 update_elastix_transforms_locations <- function(transform_file,
                                                 search = "1_elastix_affine",
                                                 file_path = NULL){
-   # Read the file content
-  lines <- readLines(transform_file)
-
-  # Define the target pattern and replacement
-  target_pattern <- sprintf('(InitialTransformParametersFileName\\s*")(.+%s\\.txt)(")', search)
-
-  # Function to replace the target pattern. The matched value is the full path
-  # including the `<search>.txt` filename, so the replacement must rebuild that
-  # filename too: substituting `file_path` alone collapses the chained
-  # InitialTransformParametersFileName to a bare directory, which transformix
-  # cannot read (it then fails to load the affine/coarse stages of the chain).
-  replace_path <- function(line) {
-    gsub(target_pattern,
-         paste0("\\1", file.path(file_path, paste0(search, ".txt")), "\\3"),
-         line)
+  # Read the file content; guard against a missing/empty/clobbered file so we
+  # never feed character(0) into sapply (which would return a list).
+  if (!file.exists(transform_file)) {
+    stop("Elastix transform file does not exist: ", transform_file)
+  }
+  lines <- readLines(transform_file, warn = FALSE)
+  if (length(lines) == 0L || !any(grepl("InitialTransformParametersFileName", lines, fixed = TRUE))) {
+    stop("Elastix transform file appears empty or corrupt (no header / ",
+         "InitialTransformParametersFileName key): ", transform_file,
+         ". Reinstall bancr to restore the bundled registration files.")
   }
 
-  # Apply the replacement to each line
-  updated_lines <- sapply(lines, replace_path)
+  # Match the chained InitialTransformParametersFileName regardless of whether
+  # the shipped value is a bare directory, dir+filename concatenated, or already
+  # the correct dir/<search>.txt. The optional non-greedy tail makes this both
+  # self-healing and idempotent.
+  target_pattern <- sprintf('(InitialTransformParametersFileName\\s*")(.*?)((?:[/\\\\]?%s\\.txt)?)(")',
+                            search)
+  replacement <- paste0("\\1", file.path(file_path, paste0(search, ".txt")), "\\4")
 
-  # Write the updated content back to the file
-  writeLines(updated_lines, transform_file)
+  replace_path <- function(line) {
+    gsub(target_pattern, replacement, line, perl = TRUE)
+  }
+
+  # Coerce to character explicitly so an unexpected non-atomic result can never
+  # reach writeLines.
+  updated_lines <- vapply(lines, replace_path, FUN.VALUE = character(1), USE.NAMES = FALSE)
+
+  # Nothing to do: avoid touching a shared file (and avoid racing other workers).
+  if (identical(updated_lines, lines)) {
+    return(invisible(transform_file))
+  }
+
+  # Atomic write: write to a temp file in the same directory, then rename over
+  # the target so concurrent readers/writers never see a truncated file.
+  tmp <- tempfile(tmpdir = dirname(transform_file),
+                  pattern = paste0(".", basename(transform_file), "."))
+  writeLines(updated_lines, tmp)
+  if (!file.rename(tmp, transform_file)) {
+    # Cross-device or rename failure fallback.
+    ok <- file.copy(tmp, transform_file, overwrite = TRUE)
+    unlink(tmp)
+    if (!ok) stop("Failed to update Elastix transform file: ", transform_file)
+  }
+  invisible(transform_file)
 }
 
 #' Apply Elastix Transform using Navis
