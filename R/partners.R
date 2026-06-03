@@ -84,26 +84,50 @@ banc_datastack_name <- function() {
 }
 
 banc_datastack_name_impl <- function() {
-  banc_name <- tryCatch({
-    cac=fafbseg::flywire_cave_client(NULL)
-    datastacks=cac$info$get_datastacks()
-    seldatastack=grep("brain_and_nerve_cord*", datastacks, value = T)
-    if(length(seldatastack)==0)
-      stop("Could not identify a banc production datastack amongst: ",
-           paste(datastacks, collapse=','),
-           "
-Have you been granted access to banc production?")
-    if(length(seldatastack)>1)
-      warning("Multiple banc datastacks available; ",
-              paste(seldatastack, collapse = ","),"
-",
-              "choosing: ", seldatastack[1])
-    seldatastack[1]
-  }, error = function(e){
-    warning("using default setting")
-    "brain_and_nerve_cord"
-  })
-  banc_name
+  # Explicit user override wins over auto-detection (lets power users
+  # pin to either the production or public datastack for a session).
+  override <- getOption("bancr.datastack")
+  if (!is.null(override) && nzchar(override)) return(override)
+
+  cac <- tryCatch(fafbseg::flywire_cave_client(NULL),
+                  error = function(e) NULL)
+  if (is.null(cac)) {
+    # No CAVE auth at all → public is the only thing the user can talk
+    # to. Don't error; the public datastack covers read-only access for
+    # almost everything.
+    message(
+      "No CAVE auth detected; using the public BANC datastack ",
+      "'brain_and_nerve_cord_public'. ",
+      "Run banc_set_token() and set options(bancr.datastack = ",
+      "'brain_and_nerve_cord') to use the production datastack instead."
+    )
+    return("brain_and_nerve_cord_public")
+  }
+
+  prod <- "brain_and_nerve_cord"
+  publ <- "brain_and_nerve_cord_public"
+  datastacks <- tryCatch(cac$info$get_datastacks(),
+                         error = function(e) character())
+
+  if (prod %in% datastacks) {
+    # Probe production with the user's token. get_datastack_info() is
+    # the cheapest authenticated info call; a 401/403 here means the
+    # user is registered with CAVE but hasn't been granted access to
+    # the production datastack.
+    ok <- tryCatch({
+      cac$info$get_datastack_info(prod)
+      TRUE
+    }, error = function(e) FALSE)
+    if (ok) return(prod)
+    warning(
+      "Your CAVE token does not grant access to '", prod, "'. ",
+      "Falling back to '", publ, "' for this session. ",
+      "Set options(bancr.datastack = '", prod, "') to override, or ",
+      "request production access at https://flywire.ai/banc_access.",
+      call. = FALSE
+    )
+  }
+  publ
 }
 
 #' @description \code{banc_partners} returns details of each unitary synaptic

@@ -218,6 +218,15 @@ If you have access, you can view *BANC* data in this helpful
 The BANC project uses [CAVE tables](https://global.daf-apis.com/info/) to store many sorts of annotation information. 
 You can see the available CAVE tables for BANC [here](https://cave.fanc-fly.com/annotation/views/aligned_volume/brain_and_nerve_cord). CAVE tables can be joined into useful [CAVE views](https://cave.fanc-fly.com/materialize/views/datastack/brain_and_nerve_cord) pinned to a materialisation, which can provide very useful objects such as the whole BANC edgelist. BANC view names and SQL formulas are given [here](https://github.com/jasper-tms/the-BANC-fly-connectome/wiki/CAVE-Views). 
 
+A read-only public CAVE datastack `brain_and_nerve_cord_public` is also
+available and needs no granted access — only a CAVE-registered Google
+account with a token. `bancr` auto-detects which one your token can use:
+it tries production (`brain_and_nerve_cord`) first and silently falls
+back to `brain_and_nerve_cord_public` for the session if your token
+isn't granted, emitting a one-time warning. Pin a choice explicitly
+with `options(bancr.datastack = "brain_and_nerve_cord_public")` (or
+`"brain_and_nerve_cord"`).
+
 ## Installation
 
 You can install the development version of `bancr` from github:
