@@ -44,7 +44,9 @@ jobs:
         shell: bash
         run: |
           python -m pip install --upgrade pip
-          python -m pip install --prefer-binary cloud-volume "seatable_api!=2.6.3" caveclient
+          # `fafbseg` is needed by banc_read_l2skel() which is exercised
+          # by the front-leg sensorimotor article.
+          python -m pip install --prefer-binary cloud-volume "seatable_api!=2.6.3" caveclient fafbseg
           echo "RETICULATE_PYTHON=$(python -c 'import sys; print(sys.executable)')" >> "$GITHUB_ENV"
 
       - uses: r-lib/actions/setup-r-dependencies@v2
