@@ -9,3 +9,5 @@ data-raw/*
 !data-raw/banc_lm_links.csv
 data/banc_data.sqlite
 /.claude
+vignettes/articles/*_cache/
+vignettes/articles/*_files/
