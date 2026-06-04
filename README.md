@@ -6,7 +6,7 @@
 bancr <img src="man/figures/logo.png" align="right" height="139" alt="" />
 ===========
 
-The **bancr** package provides R access to the first unified brain-and-nerve-cord connectome of a limbed animal - the Brain And Nerve Cord dataset (*BANC*) of *Drosophila melanogaster*. This important dataset represents a significant advance in our understanding of neural circuits, revealing how the brain and nerve cord work together as an integrated system to control behavior.
+The **bancr** package provides R access to the first unified brain-and-nerve-cord connectome of a limbed animal - the [Brain And Nerve Cord dataset (*BANC*)](https://doi.org/10.1038/s41586-026-10735-w) of *Drosophila melanogaster*. This important dataset represents a significant advance in our understanding of neural circuits, revealing how the brain and nerve cord work together as an integrated system to control behavior.
 
 ### Scientific Significance
 
@@ -201,7 +201,7 @@ This systematic annotation framework enables:
 
 For the complete annotation taxonomy and detailed term descriptions, see
 the BANC paper supplementary materials
-([Bates et al. 2025](https://doi.org/10.1101/2025.07.31.667571))
+([Bates et al. 2026, *Nature*](https://doi.org/10.1038/s41586-026-10735-w))
 and the [BANC community wiki](https://github.com/jasper-tms/the-BANC-fly-connectome/wiki/).
 
 ## Access and Setup
@@ -669,20 +669,12 @@ ggplot(combined_data, aes(x = weight, fill = source)) +
 Acknowledging the data and tools
 --------------------------------
 
-BANC data needs to be acknowledged in accordance to the [BANC community guidelines](https://github.com/jasper-tms/the-BANC-fly-connectome/wiki/)
-and in agreement with the BANC consortium.
-If you use this package, please cite the BANC paper
-[(Bates et al. 2025)](https://doi.org/10.1101/2025.07.31.667571)
-and our *natverse* paper
-[(Bates et al. 2020)](https://elifesciences.org/articles/53350)
-in addition to the R package itself:
-
-``` r
-citation(package = "bancr")
-```
-
-**Bates A, Jefferis G** (2025). _bancr: R Client Access to the Brain And Nerve Cord (BANC) Dataset_. R package version 0.3.0,
-  <https://github.com/natverse/bancr>.
+BANC data needs to be acknowledged in accordance with the
+[BANC community guidelines](https://github.com/jasper-tms/the-BANC-fly-connectome/wiki/)
+and in agreement with the BANC consortium. See the
+[**Citation**](#citation) section at the end of this README for the
+exact references to cite when you publish work that uses this
+package.
 
 
 Acknowledgements
@@ -698,7 +690,7 @@ at Harvard Medical School.
 References
 ----------
 
-**Bates, Alexander Shakeel, Jasper S. Phelps, Minsu Kim, Han S. J. Yang, Arie Matsliah, Zaki Ajabi, Eric Perlman, et al.** 2025. *Distributed Control Circuits across a Brain-and-Cord Connectome.* bioRxiv 2025.07.31.667571. https://doi.org/10.1101/2025.07.31.667571.
+**Bates, Alexander Shakeel, Jasper S. Phelps, Minsu Kim, Han S. J. Yang, Arie Matsliah, Zaki Ajabi, Eric Perlman, et al.** 2026. *Distributed Control Circuits across a Brain-and-Cord Connectome.* *Nature*. <https://doi.org/10.1038/s41586-026-10735-w>. Preprint: bioRxiv 2025.07.31.667571, <https://doi.org/10.1101/2025.07.31.667571>.
 
 **Bates, Alexander Shakeel, James D. Manton, Sridhar R. Jagannathan, Marta Costa, Philipp Schlegel, Torsten Rohlfing, and Gregory SXE Jefferis**. 2020. *The Natverse, a Versatile Toolbox for Combining and Analysing Neuroanatomical Data.* eLife 9 (April). https://doi.org/10.7554/eLife.53350.
 
@@ -711,3 +703,39 @@ Harvard Dataverse data deposit are released under the
 [Creative Commons Attribution 4.0 International License (CC BY 4.0)](https://creativecommons.org/licenses/by/4.0/).
 This source code remains under its existing OSI-approved open-source license
 — see [`LICENSE.md`](LICENSE.md).
+
+## Citation
+
+When you publish work that uses `bancr`, please cite **both** the
+BANC paper and the package's Zenodo deposit:
+
+1. **The BANC paper** (the data and atlas the package wraps):
+
+   > Bates AS, Phelps JS, Kim M, Yang HSJ, Matsliah A, Ajabi Z, Perlman E, *et al.* (2026).
+   > Distributed control circuits across a brain-and-cord connectome.
+   > *Nature*. <https://doi.org/10.1038/s41586-026-10735-w>.
+   > Preprint: bioRxiv 2025.07.31.667571, <https://doi.org/10.1101/2025.07.31.667571>.
+
+2. **The `bancr` R package itself**, via the version-specific DOI on
+   Zenodo: every tagged release of this repo is archived to Zenodo
+   under the metadata in [`.zenodo.json`](.zenodo.json). The latest
+   release and its DOI badge are listed on the
+   [GitHub releases page](https://github.com/natverse/bancr/releases).
+   Cite the specific version you used, e.g.:
+
+   > Bates AS, Yang HH, Jefferis GSXE. *bancr: R Client Access to the
+   > Brain And Nerve Cord (BANC) Dataset*. Zenodo. doi:10.5281/zenodo.&lt;ID&gt;.
+
+   In R, the latest installed package's full reference (BANC paper,
+   *natverse* paper, and the package version you've installed) is
+   available via:
+
+   ```r
+   citation(package = "bancr")
+   ```
+
+If you also rely on the wider `natverse` ecosystem that `bancr` is
+built on, please additionally cite the *natverse* paper
+([Bates et al. 2020](https://elifesciences.org/articles/53350)).
+Data-use rules and additional acknowledgements are governed by the
+[BANC community guidelines](https://github.com/jasper-tms/the-BANC-fly-connectome/wiki/).

@@ -67,7 +67,18 @@ banc_brain_side_view <- function(){
   rgl::rgl.viewpoint(userMatrix = banc_rotation_matrices[["brain_side"]], zoom = 0.25)
 }
 
-# hidden
+#' Canonical BANC viewpoints as 4x4 rotation matrices
+#'
+#' A named list of `userMatrix`-style matrices used by
+#' [banc_view()] / [banc_front_view()] / [banc_vnc_view()] etc. and
+#' by [banc_neuron_comparison_plot()] to switch
+#' [`nat.ggplot::geom_neuron()`] between standard BANC viewpoints
+#' (`main`, `side`, `front`, `vnc`, `vnc_side`, `brain_side`). Exposed
+#' so users can compose their own multi-panel ggplots without
+#' re-deriving the matrices.
+#'
+#' @format A named list of 4x4 numeric matrices.
+#' @export
 banc_rotation_matrices <- list(
   main = structure(c(0.961547076702118, 0.037275392562151,
                                   0.27209860086441, 0, 0.0369537360966206, -0.999296963214874,
