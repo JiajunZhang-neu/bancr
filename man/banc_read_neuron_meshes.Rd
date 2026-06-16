@@ -6,7 +6,7 @@
 \alias{banc_read_nuclei_mesh}
 \title{Read one or more BANC neuron and nuclei meshes}
 \usage{
-banc_read_neuron_meshes(ids, savedir = NULL, format = c("ply", "obj"), ...)
+banc_read_neuron_meshes(ids, savedir = NULL, format = c("obj","ply"), ...)
 
 banc_read_mitochondria_mesh(
   ids,
